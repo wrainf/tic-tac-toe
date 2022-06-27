@@ -47,11 +47,6 @@ const Gameboard = (() => {
         return null;
     }
 
-    const resetBoard = () => {
-        board = ['','','','','','','','',''];
-        renderContents();
-    }
-
     const checkWin = () => {
         let winner =  (_checkHorizontalWin() || _checkVerticalWin() || _checkAscendingWin() || _checkDescendingWin());
         
@@ -61,6 +56,13 @@ const Gameboard = (() => {
             alert('Player 2 Wins');
         }
         return winner;
+    }
+
+    const resetBoard = () => {
+        for (let index = 0; index < 9; index++) {
+            board[index] = '';
+        }
+        renderContents();
     }
 
     return{
@@ -79,6 +81,14 @@ const Player = (symbol) => {
         if(targetBox == ''){
             Gameboard.board[position] = move;
             Gameboard.renderContents();
+
+            setTimeout(() => {
+                let winner = Gameboard.checkWin();
+                if(winner != null){
+                    Gameboard.resetBoard();
+                    currPlayer = 1;
+                }
+            },100);
             // succesfull 
             return 1;
         }
@@ -97,6 +107,8 @@ const gameControl = (()=>{
 
     Gameboard.renderContents();
 
+    
+
     boxes.forEach( (box) => {
         box.addEventListener('click', () => {
             if(currPlayer == 1 && player1.makeMove(box.id) == 1){
@@ -106,15 +118,12 @@ const gameControl = (()=>{
                 player2.makeMove(box.id);
                 currPlayer--;
             }
-            setTimeout(() => {
-                let winner = Gameboard.checkWin();
-                if(winner != null){
-                    Gameboard.resetBoard();
-                }
-            },100);
+            
         });
     
     });
+
+    
 
 })();
 
