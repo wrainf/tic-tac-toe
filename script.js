@@ -58,6 +58,13 @@ const Gameboard = (() => {
         return winner;
     }
 
+    const checkDraw = () => {
+        if(!board.includes('') == true){
+            alert("Draw!")
+        }
+        return !board.includes('');
+    }
+
     const resetBoard = () => {
         for (let index = 0; index < 9; index++) {
             board[index] = '';
@@ -69,7 +76,8 @@ const Gameboard = (() => {
         board,
         renderContents,
         checkWin,
-        resetBoard
+        resetBoard,
+        checkDraw
     };
 })();
 
@@ -81,14 +89,6 @@ const Player = (symbol) => {
         if(targetBox == ''){
             Gameboard.board[position] = move;
             Gameboard.renderContents();
-
-            setTimeout(() => {
-                let winner = Gameboard.checkWin();
-                if(winner != null){
-                    Gameboard.resetBoard();
-                    currPlayer = 1;
-                }
-            },100);
             // succesfull 
             return 1;
         }
@@ -118,6 +118,13 @@ const gameControl = (()=>{
                 player2.makeMove(box.id);
                 currPlayer--;
             }
+            setTimeout(() => {
+                let winner = Gameboard.checkWin();
+                if(winner != null || Gameboard.checkDraw() == true){
+                    Gameboard.resetBoard();
+                    currPlayer = 1;
+                }
+            },100);
             
         });
     
